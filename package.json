@@ -1,0 +1,36 @@
+{
+  "name": "smart-svg-path",
+  "version": "1.0.0",
+  "description": "Smarter, easier SVG path manipulations for fine grain control over SVG path animations.",
+  "main": "SmartSVGPath.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SmartArtsStudio/smart-svg-path.git"
+  },
+  "keywords": [
+    "reverse",
+    "SVG",
+    "path",
+    "animation",
+    "set",
+    "first",
+    "vertex",
+    "arc",
+    "to",
+    "cubic",
+    "Bezier",
+    "get",
+    "sub",
+    "paths",
+    "toAbsolute"
+  ],
+  "author": "Daniel Kristensen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SmartArtsStudio/smart-svg-path/issues"
+  },
+  "homepage": "https://github.com/SmartArtsStudio/smart-svg-path#readme"
+}
