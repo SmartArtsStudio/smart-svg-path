@@ -2,11 +2,11 @@
 # smart-svg-path
 
 #### SmartSVGPath.js smarter easier SVG path management methods.
-#### For total mastery of SVG path data, make fine tuning advanced SVG path animations easier. 
+#### For total mastery of SVG path data. Make fine tuning complex SVG path animations easier. 
 
 #### Can't find how to:
 ##### - Reverse an SVG path.
-##### - Set any path vertex as the paths first vertex.
+##### - Set any path vertex as a path's first vertex.
 #### ...I couldn't either!
 ##### - Automatically Convert all SVG elements (individually or by collection) to paths, keeping all other attributes.
 ##### - Automatically Convert geometric arcTo commands to cubic Bezier curveTo commands.
