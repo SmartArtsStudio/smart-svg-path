@@ -1,0 +1,110 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'publish' ]
+2 info using npm@3.3.12
+3 info using node@v5.3.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: 'D:\\80 - SmartArtsStudio\\SmartRepository\\smart-svg-path',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory C:\Users\Daniel\AppData\Roaming\npm-cache\smart-svg-path\1.0.0\package.tgz not in flight; packing
+9 info lifecycle smart-svg-path@1.0.0~prepublish: smart-svg-path@1.0.0
+10 silly lifecycle smart-svg-path@1.0.0~prepublish: no script for prepublish, continuing
+11 verbose tar pack [ 'C:\\Users\\Daniel\\AppData\\Roaming\\npm-cache\\smart-svg-path\\1.0.0\\package.tgz',
+11 verbose tar pack   'D:\\80 - SmartArtsStudio\\SmartRepository\\smart-svg-path' ]
+12 verbose tarball C:\Users\Daniel\AppData\Roaming\npm-cache\smart-svg-path\1.0.0\package.tgz
+13 verbose folder D:\80 - SmartArtsStudio\SmartRepository\smart-svg-path
+14 verbose addLocalTarball adding from inside cache C:\Users\Daniel\AppData\Roaming\npm-cache\smart-svg-path\1.0.0\package.tgz
+15 silly cache afterAdd smart-svg-path@1.0.0
+16 verbose afterAdd C:\Users\Daniel\AppData\Roaming\npm-cache\smart-svg-path\1.0.0\package\package.json not in flight; writing
+17 verbose afterAdd C:\Users\Daniel\AppData\Roaming\npm-cache\smart-svg-path\1.0.0\package\package.json written
+18 silly publish { name: 'smart-svg-path',
+18 silly publish   version: '1.0.0',
+18 silly publish   description: 'Smarter, easier SVG path manipulations for fine grain control over SVG path animations.',
+18 silly publish   main: 'SmartSVGPath.js',
+18 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+18 silly publish   repository:
+18 silly publish    { type: 'git',
+18 silly publish      url: 'git+https://github.com/SmartArtsStudio/smart-svg-path.git' },
+18 silly publish   keywords:
+18 silly publish    [ 'reverse',
+18 silly publish      'SVG',
+18 silly publish      'path',
+18 silly publish      'animation',
+18 silly publish      'set',
+18 silly publish      'first',
+18 silly publish      'vertex',
+18 silly publish      'arc',
+18 silly publish      'to',
+18 silly publish      'cubic',
+18 silly publish      'Bezier',
+18 silly publish      'get',
+18 silly publish      'sub',
+18 silly publish      'paths',
+18 silly publish      'toAbsolute' ],
+18 silly publish   author: { name: 'Daniel Kristensen' },
+18 silly publish   license: 'MIT',
+18 silly publish   bugs: { url: 'https://github.com/SmartArtsStudio/smart-svg-path/issues' },
+18 silly publish   homepage: 'https://github.com/SmartArtsStudio/smart-svg-path#readme',
+18 silly publish   readme: '\r\n# smart-svg-path\r\n\r\n#### SmartSVGPath.js smarter easier SVG path management methods.\r\n#### For total mastery of SVG path data, make fine tuning advanced SVG path animations easier. \r\n\r\n#### Can\'t find how to:\r\n##### - Reverse an SVG path.\r\n##### - Set any path vertex as the paths first vertex.\r\n#### ...I couldn\'t either!\r\n##### - Automatically Convert all SVG elements (individually or by collection) to paths, keeping all other attributes.\r\n##### - Automatically Convert geometric arcTo commands to cubic Bezier curveTo commands.\r\n##### - and more...\r\n\r\nWe don\'t always control the SVG output from Illustrator, Inkscape  etc... even when we do,\r\npaths can still come out in an undesired order or direction for animation. Manipulating targeted\r\nproblem path data is probably a lot quicker, (now easier) and smarter than having the artist/designer\r\nhave to redo work they have already completed just in a different order.\r\n\r\nSmartSVGPath came about because I could not find a library that knew how to reverse an SVG path!!\r\n\r\nSo reversing SVG path data, and arbitrarily change which vertex is the starting vertex on a path\r\nare at least two features of this library which you will have trouble finding\r\nelsewhere. Well at least prior to my release of this library, and I looked pretty hard.\r\n\r\n### How to use:\r\nThis library is designed to be Node.js and Browser compatible, just drop it where-ever you want it\r\nand access it via the SmartSVGPath name space (or your own alias).\r\n\r\nDon\'t instantiate SmartSVGPath, its a static \'class\', just use it.\r\n\r\nThe source code is fully self documenting and commented for education and enlightenment.\r\nThe source code is also fully YUIdoc-umented, you can generate YUIDocs locally if I have not yet posted the documentation online.\r\n(I have more pressing matters currently, but a GruntFile with the usual tasks and documentation are on the TODO list.)\r\nOr simply read the source:\r\n\r\n#### \'d\' String Methods: \r\nWork directly on the SVGElement attribute \'d\' data string. Independant so you can build your own tools incorporating them.\r\nOtherwise SmartSVGPath does provide some basic tools...\r\n\r\n####SVGElement Methods: \r\nWork directly on both individual and collections of DOM SVGElements automatically:\r\n     - Converting there <shape> data and attributes to \'d\' attribute data string.\r\n     - Rewriting an existing \'d\' attribute data string\r\n\r\nWhy the strange SmartSVGPath[\'method\'] string naming for method declarations?\r\nSmarter google Closure compatibility. This convention produces optimised output that does not\r\ndepend on, or add additional Closure library bloat to your source code, JUST to access method\r\nname \'symbols\'. Closure compiler renames properties in Advanced mode, but it never renames\r\nstrings.\r\n\r\nNote the method SmartSVGPath[\'method\'] naming convention is only for the public API methods.\r\nSo Closure can still aggressively optimise away on the private stuff.\r\n',
+18 silly publish   readmeFilename: 'README.md',
+18 silly publish   gitHead: '43f0ab977e3f20bfabca611d3af13d33c270ffa2',
+18 silly publish   _id: 'smart-svg-path@1.0.0',
+18 silly publish   _shasum: 'c4f3088783cfc82f9ac69b242f9ea7859232045a',
+18 silly publish   _from: '.' }
+19 verbose getPublishConfig undefined
+20 silly mapToRegistry name smart-svg-path
+21 silly mapToRegistry using default registry
+22 silly mapToRegistry registry https://registry.npmjs.org/
+23 silly mapToRegistry uri https://registry.npmjs.org/smart-svg-path
+24 verbose publish registryBase https://registry.npmjs.org/
+25 silly publish uploading C:\Users\Daniel\AppData\Roaming\npm-cache\smart-svg-path\1.0.0\package.tgz
+26 verbose request uri https://registry.npmjs.org/smart-svg-path
+27 verbose request sending authorization for write operation
+28 info attempt registry request try #1 at 9:57:08 AM
+29 verbose request id a1cb3f9d5a2d0b6a
+30 http request PUT https://registry.npmjs.org/smart-svg-path
+31 http 403 https://registry.npmjs.org/smart-svg-path
+32 verbose headers { 'content-type': 'application/json',
+32 verbose headers   'cache-control': 'max-age=300',
+32 verbose headers   'content-length': '95',
+32 verbose headers   'accept-ranges': 'bytes',
+32 verbose headers   date: 'Fri, 11 Mar 2016 22:56:54 GMT',
+32 verbose headers   via: '1.1 varnish',
+32 verbose headers   connection: 'keep-alive',
+32 verbose headers   'x-served-by': 'cache-mel6521-MEL',
+32 verbose headers   'x-cache': 'MISS',
+32 verbose headers   'x-cache-hits': '0',
+32 verbose headers   'x-timer': 'S1457737013.700283,VS0,VE975' }
+33 verbose request invalidating C:\Users\Daniel\AppData\Roaming\npm-cache\registry.npmjs.org\smart-svg-path on PUT
+34 error publish Failed PUT 403
+35 verbose stack Error: "You cannot publish over the previously published version 1.0.0." : smart-svg-path
+35 verbose stack     at makeError (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:264:12)
+35 verbose stack     at CachingRegistryClient.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:252:14)
+35 verbose stack     at Request._callback (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:172:14)
+35 verbose stack     at Request.self.callback (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:198:22)
+35 verbose stack     at emitTwo (events.js:87:13)
+35 verbose stack     at Request.emit (events.js:172:7)
+35 verbose stack     at Request.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1082:10)
+35 verbose stack     at emitOne (events.js:82:20)
+35 verbose stack     at Request.emit (events.js:169:7)
+35 verbose stack     at IncomingMessage.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1009:12)
+36 verbose statusCode 403
+37 verbose pkgid smart-svg-path
+38 verbose cwd D:\80 - SmartArtsStudio\SmartRepository\smart-svg-path
+39 error Windows_NT 6.1.7601
+40 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "publish"
+41 error node v5.3.0
+42 error npm  v3.3.12
+43 error code E403
+44 error "You cannot publish over the previously published version 1.0.0." : smart-svg-path
+45 error If you need help, you may report this error at:
+45 error     <https://github.com/npm/npm/issues>
+46 verbose exit [ 1, true ]

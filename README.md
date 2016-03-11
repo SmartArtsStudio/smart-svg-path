@@ -19,9 +19,10 @@ have to redo work they have already completed just in a different order.
 
 SmartSVGPath came about because I could not find a library that knew how to reverse an SVG path!!
 
-So reversing SVG path data, and arbitrarily change which vertex is the starting vertex on a path
-are at least two features of this library which you will have trouble finding
-elsewhere. Well at least prior to my release of this library, and I looked pretty hard.
+So reversing SVG path data, and arbitrarily changing which vertex is the starting vertex on a path
+are at least two features of this light weight library which you will have trouble finding
+elsewhere. Well, at least prior to my release of this library, I looked pretty hard because I had no
+idea how to do it.
 
 ### How to use:
 This library is designed to be Node.js and Browser compatible, just drop it where-ever you want it
