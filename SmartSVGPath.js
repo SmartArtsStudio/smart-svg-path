@@ -98,11 +98,11 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *
      * @static
      * @public
-     * @method  getSubPaths
+     * @method  getCommands
      * @param   {String}    d   SVG <path d=''> path attribute string.
      * @returns {Array}         Array of subPaths.
      */
-    SmartSVGPath["getSubPaths"] = function ( d ) {
+    SmartSVGPath["getCommands"] = function ( d ) {
         d = SmartSVGPath.normalize( d );
         // Split sub-paths before each command.
         var subPaths = d.replace( /([a-zA-Z])\s?/g, '|$1' ).split( '|' );
@@ -126,7 +126,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @returns {String|Boolean}    d   Normalised path attribute string, or FALSE if 'd' not String.
      */
     SmartSVGPath["normalize"] = function ( d ) {
-        if ( typeof d !== 'string' ) { return false }
+        if ( typeof d !== 'string' ) {
+            return false
+        }
         d = d.replace( /[,\n\r]/g, ' ' );        // Replace commas, new line and carriage return characters with spaces.
         d = d.replace( /-/g, ' - ' );            // Space delimit 'negative' signs. (maybe excessive but safe)
         d = d.replace( /-\s+/g, '-' );           // Remove space to the right of 'negative's.
@@ -191,7 +193,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
             var token = tokens[i];
 
             // Parse tokens for path command.
-            switch ( token ) {
+            switch (token) {
                 // For each command reverse its arguments and
                 // shift the command itself appropriately.
                 case 'M':
@@ -251,8 +253,8 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     // This token is not an absolute path command!
                     // ie: lower case relative path command from a non absolute path string,
                     // or corrupted path output.
-                    var before = tokens.slice( Math.max( i - 4, 0 ), 4 ).join( ' ' );
-                    var after = tokens.slice( i + 1, Math.min( i + 4, tokensLength - 1 ) ).join( ' ' );
+                    var before = tokens.slice( Math.max( i - 4, 0 ), 3 ).join( ' ' );
+                    var after = tokens.slice( i + 1, Math.min( i + 3, tokensLength - 1 ) ).join( ' ' );
                     var span = before + ' >[' + token + ']< ' + after;
                     throw(
                         '[SmartSVGPath Error] SmartSVGPath.reverseAbsolute expected absolute SVG path command. At vertex ' + i + ' (' + span + ')\n' +
@@ -338,13 +340,15 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @returns {String}
      */
     SmartSVGPath["toAbsolute"] = function ( d, precision/*, reversible*/ ) {
-        if ( typeof d !== 'string' ) { return d }
+        if ( typeof d !== 'string' ) {
+            return d
+        }
 
         var absolutePath = '';
         var args = [], argsLength;
-        var subPaths = SmartSVGPath.getSubPaths( d );
-        var subPathsLength = subPaths.length;
-        var j, command, subPath, token;
+        var commands = SmartSVGPath.getCommands( d );
+        var commandsLength = commands.length;
+        var j, name, command, token;
         // current point
         var x = 0, y = 0;
         // start point
@@ -357,13 +361,13 @@ this["SmartSVGPath"] = (function () {   'use strict';
         var x2 = 0, y2 = 0;
         var cubicSubPath;
 
-        for (var i = 0; i < subPathsLength; i++) {
+        for (var i = 0; i < commandsLength; i++) {
 
             // Tokenise sub-path.
-            subPath = subPaths[i];
-            command = subPath.substring( 0, 1 );
-            token = command.toLowerCase();
-            args = subPath.replace( command, '' ).trim().split( ' ' );
+            command = commands[i];
+            name = command.substring( 0, 1 );
+            token = name.toLowerCase();
+            args = command.replace( name, '' ).trim().split( ' ' );
             argsLength = args.length;
 
             // Parse tokens & build absolute path string.
@@ -371,12 +375,12 @@ this["SmartSVGPath"] = (function () {   'use strict';
             // The result of which Strings are returned as Numbers (32bits).
             switch (token) {
 
-            /* Lines */
+                /* Lines */
 
                 // moveTo
                 case 'm':
                 {
-                    if ( command === 'm' ) {
+                    if ( name === 'm' ) {
                         x += +args[0];
                         y += +args[1];
                     }
@@ -391,7 +395,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     if ( argsLength > 2 ) {
                         // Process implied moveTo command(s).
                         for (j = 0; j < argsLength; j += 2) {
-                            if ( command === 'm' ) {
+                            if ( name === 'm' ) {
                                 x += +args[j];
                                 y += +args[j + 1];
                             }
@@ -409,7 +413,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                 case 'l':
                 {
                     for (j = 0; j < argsLength; j += 2) {
-                        if ( command === 'l' ) {
+                        if ( name === 'l' ) {
                             x += +args[j];
                             y += +args[j + 1];
                         }
@@ -425,7 +429,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                 case 'h':
                 {
                     for (j = 0; j < argsLength; j++) {
-                        if ( command === 'h' ) {
+                        if ( name === 'h' ) {
                             x += +args[j];
                         }
                         else {
@@ -439,7 +443,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                 case 'v':
                 {
                     for (j = 0; j < argsLength; j++) {
-                        if ( command === 'v' ) {
+                        if ( name === 'v' ) {
                             y += +args[j];
                         }
                         else {
@@ -450,14 +454,14 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     break;
                 }
 
-            /* Bézier Curves */
+                /* Bézier Curves */
 
                 // Quadratic curveTo: from the current point to (x, y) using control point (cx1, cy1).
                 case 'q':
                 {
                     // In loop to account for 'poly-Bézier' arguments.
                     for (j = 0; j < argsLength; j += 4) {
-                        if ( command === 'q' ) {
+                        if ( name === 'q' ) {
                             cx1 = x + +args[j];
                             cy1 = y + +args[j + 1];
                             x += +args[j + 2];
@@ -484,7 +488,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                         cx1 = x + (x - cx1);
                         cy1 = y + (y - cy1);
                         // New end vertex to interpolate to.
-                        if ( command === 't' ) {
+                        if ( name === 't' ) {
                             x += +args[j];
                             y += +args[j + 1];
                         }
@@ -504,7 +508,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                 {
                     // In loop to account for 'poly-Bézier' arguments.
                     for (j = 0; j < argsLength; j += 6) {
-                        if ( command === 'c' ) {
+                        if ( name === 'c' ) {
                             cx1 = x + +args[j];
                             cy1 = y + +args[j + 1];
                             cx2 = x + +args[j + 2];
@@ -536,7 +540,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                         cx1 = x + (x - cx2);
                         cy1 = y + (y - cy2);
                         // New end vertex to interpolate to.
-                        if ( command === 's' ) {
+                        if ( name === 's' ) {
                             cx2 = x + +args[j];
                             cy2 = y + +args[j + 1];
                             x += +args[j + 2];
@@ -553,7 +557,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     break;
                 }
 
-            /* Geometric Arc curve */
+                /* Geometric Arc curve */
 
                 // arcTo: from the current (x, y) point using control point (cx1, cy1)
                 // as the control point for the beginning of the curve and (cx2, cy2) as the
@@ -568,7 +572,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     largeArcFlag = +args[3];
                     sweepFlag = +args[4];
 
-                    if ( command === 'a' ) {
+                    if ( name === 'a' ) {
                         x2 = x += +args[5];
                         y2 = y += +args[6];
                     }
@@ -580,12 +584,12 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     //      // convert arcs to concatenated Bézier curves
                     //      cubicSubPath = SmartSVGPath.arcToCurve( x1, y1, rx, ry, xAxisRotation, largeArcFlag, sweepFlag, x2, y2 );
                     //      // cubic arguments may contain 'poly-Bézier' arguments (chained Bézier curves),
-                    //      // which are not 'absolute' path notation, so toAbsolute( subPath )...
+                    //      // which are not 'absolute' path notation, so toAbsolute( command )...
                     //      absolutePath += ' '+ SmartSVGPath.toAbsolute( cubicSubPath, !!reversible );
                     // }
                     // else {
-                        absolutePath += ' A ' + rx + ' ' + ry + ' ' + xAxisRotation + ' ' + largeArcFlag + ' '
-                            + sweepFlag + ' ' + x + ' ' + y;
+                    absolutePath += ' A ' + rx + ' ' + ry + ' ' + xAxisRotation + ' ' + largeArcFlag + ' '
+                        + sweepFlag + ' ' + x + ' ' + y;
                     // }
                     break;
                 }
@@ -941,7 +945,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
         y2 = +lineElement.getAttribute( 'y2' );
 
         var pathString =
-               'M ' + x1 + ' ' + y1
+            'M ' + x1 + ' ' + y1
             + ' L ' + x2 + ' ' + y2;
 
         if ( pathString.indexOf( '.' ) != -1 ) {
@@ -1214,27 +1218,41 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @static
      * @public
      * @method  setFirstVertex
-     * @param   {String}        d               SVG <path d=''> path attribute string.
+     * @param   {String}        d                   SVG <path d=''> path attribute string.
      * @param   {String|Number} firstVertex
-     * @returns {String|Boolean}                SVG <path d=''> path attribute string.
-     *                                          (Which starts at the nominated vertex)
-     *                                          or FALSE if 'd' is not a string.
+     * @param   {Boolean}       [lineToWrap=false]  If the path is an OPEN path and the firstVertex
+     *                                              is mid path, do you want the path to wrap with a:
+     *                                                  TRUE: lineTo 'L' command (draw the wrap), or
+     *                                                  FALSE: moveTo 'M' command (don't draw the wrap)
+     * @returns {String|Boolean}                    SVG <path d=''> path attribute string.
+     *                                              (Which starts at the nominated vertex)
+     *                                              or FALSE if 'd' is not a string.
      */
-    SmartSVGPath["setFirstVertex"] = function ( d, firstVertex ) {
-        if ( typeof d !== 'string' ) { return false }
+    SmartSVGPath["setFirstVertex"] = function ( d, firstVertex, lineToWrap ) {
+        if ( typeof d !== 'string' ) {
+            return false
+        }
         d = SmartSVGPath.toAbsolute( SmartSVGPath.normalize( d ) );
-        var subPaths = SmartSVGPath.getSubPaths( d );
+        var commands = SmartSVGPath.getCommands( d );
         var vertices = SmartSVGPath.traceVertices( d );
         // Convert moveTo command to lineTo.
-        subPaths[0] = subPaths[0].replace( 'M', 'L' );
-        var last =subPaths.length-1;
-        var closePath = /[Zz]/.test( subPaths[last] ) ? subPaths.splice( last ) : [];
+        commands[0] = commands[0].replace( 'M', 'L' );
+        var last = commands.length - 1;
+        // wrap firstVertex value if firstVertex > total vertices.
+        firstVertex = +firstVertex <= last ? +firstVertex : +firstVertex % last;
+        // Handle CLOSED paths.
+        var closePath = /[Zz]/.test( commands[last] ) ? commands.splice( last ) : [];
+        // Handle OPEN paths potential vertex wrapping.
+        var onWrap = !lineToWrap ? 'M ' : 'L ';
+        var wrapPath = closePath.length < 1 ? [onWrap + vertices[firstVertex].from.x + ' ' + vertices[firstVertex].from.y] : [''];
+
         // Rotate paths to bring new first vertex to the start.
-        var rotatedPaths = subPaths.concat( subPaths.splice( 0, +firstVertex ) );
-        var rotatedVertices = vertices.concat( vertices.splice( 0, +firstVertex ) );
+        var splice = commands.splice( 0, +firstVertex );
+        var rotatedPaths = commands.concat( wrapPath ).concat( splice );
+        var rotatedVertices = vertices.concat( vertices.splice( 0, firstVertex ) ); // no longer in sync due to commands.concat( wrapPath )
         // reCreate path data string.
         var pathString = 'M ' + rotatedVertices[0].from.x + ' ' + rotatedVertices[0].from.y + ' ';
-        return pathString + rotatedPaths.join().replace( /\s+,/g, ' ') + closePath;
+        return pathString + rotatedPaths.join().replace( /\s+,/g, ' ' ) + closePath;
     };
 
     /**
@@ -1268,10 +1286,12 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @returns {Object}                        Data object.
      */
     SmartSVGPath["traceVertices"] = function ( d, logMethod ) {
-        if ( typeof d !== 'string' ) { return false }
+        if ( typeof d !== 'string' ) {
+            return false
+        }
 
-        var subPaths = SmartSVGPath.getSubPaths( d );
-        var subPathsLength = subPaths.length;
+        var commands = SmartSVGPath.getCommands( d );
+        var commandsLength = commands.length;
         var j, vertices = [];
         // current point
         var x = 0;
@@ -1281,27 +1301,27 @@ this["SmartSVGPath"] = (function () {   'use strict';
         var yStart = 0;
         var prevPath, count = 0;
 
-        for (var i = 0; i < subPathsLength; i++) {
+        for (var i = 0; i < commandsLength; i++) {
 
             // Tokenise sub-path.
-            var subPath = subPaths[i];
-            var command = subPath.substring( 0, 1 );
-            var args = subPath.replace( command, '' ).trim().split( ' ' );
+            var command = commands[i];
+            var name = command.substring( 0, 1 );
+            var args = command.replace( name, '' ).trim().split( ' ' );
 
-            switch ( command ){
+            switch (name) {
                 case 'M':
                 {
                     prevPath = null;
                     vertices[i] = {
                         count       : count + 2,
                         subPathIndex: i,
-                        subPath     : subPath,
+                        subPath     : command,
                         from        : { x: +args[0], y: +args[1]},
                         to          : { x: +args[0], y: +args[1] }
-                        };
+                    };
                     xStart = x = +args[0];
                     yStart = y = +args[1];
-                    prevPath = subPath;
+                    prevPath = command;
                     break;
                 }
                 case 'L':
@@ -1309,13 +1329,13 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     vertices[i] = {
                         count       : count + 2,
                         subPathIndex: i,
-                        subPath     : subPath,
+                        subPath     : command,
                         from        : { x: x, y: y},
                         to          : { x: +args[0], y: +args[1] }
                     };
                     x = +args[0];
                     y = +args[1];
-                    prevPath = subPath;
+                    prevPath = command;
                     break;
                 }
                 case 'A':
@@ -1323,13 +1343,13 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     vertices[i] = {
                         count       : count + 2,
                         subPathIndex: i,
-                        subPath     : subPath,
+                        subPath     : command,
                         from        : { x: x, y: y},
                         to          : { x: +args[5], y: +args[6] }
                     };
                     x = +args[5];
                     y = +args[6];
-                    prevPath = subPath;
+                    prevPath = command;
                     break;
                 }
                 case 'Q':
@@ -1337,13 +1357,13 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     vertices[i] = {
                         count       : count + 2,
                         subPathIndex: i,
-                        subPath     : subPath,
+                        subPath     : command,
                         from        : { x: x, y: y},
                         to          : { x: +args[2], y: +args[3] }
                     };
                     x = +args[2];
                     y = +args[3];
-                    prevPath = subPath;
+                    prevPath = command;
                     break;
                 }
                 case 'C':
@@ -1351,13 +1371,13 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     vertices[i] = {
                         count       : count + 2,
                         subPathIndex: i,
-                        subPath     : subPath,
+                        subPath     : command,
                         from        : { x: x, y: y},
                         to          : { x: +args[4], y: +args[5] }
                     };
                     x = +args[4];
                     y = +args[5];
-                    prevPath = subPath;
+                    prevPath = command;
                     break;
                 }
                 case 'Z':
@@ -1365,13 +1385,13 @@ this["SmartSVGPath"] = (function () {   'use strict';
                     vertices[i] = {
                         count       : count + 2,
                         subPathIndex: i,
-                        subPath     : subPath,
+                        subPath     : command,
                         from        : { x: x, y: y},
                         to          : { x: xStart, y: yStart }
                     };
                     x = xStart;
                     y = yStart;
-                    prevPath = subPath;
+                    prevPath = command;
                     break;
                 }
                 default:
@@ -1398,20 +1418,20 @@ this["SmartSVGPath"] = (function () {   'use strict';
         return array;
     };
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                                                                                //
-    //                                                                                                //
-    // ██████ ██  ██ ██████ ██████ ██                           ██   ██        ██   ██       ██       //
-    // ██     ██  ██ ██     ██     ██                           ███ ███        ██   ██       ██       //
-    // ██     ██  ██ ██     ██     █████ █████ █████ █████      ███████ █████ █████ █████ █████ █████ //
-    // ██████ ██  ██ ██ ███ ██████ ██ ██    ██ ██ ██ ██ ██      ██ █ ██ ██ ██  ██   ██ ██ ██ ██ ██    //
-    //     ██ ██  ██ ██  ██     ██ ██ ██ █████ ██ ██ █████      ██   ██ █████  ██   ██ ██ ██ ██ █████ //
-    //     ██  ████  ██  ██     ██ ██ ██ ██ ██ ██ ██ ██         ██   ██ ██     ██   ██ ██ ██ ██    ██ //
-    // ██████   ██   ██████ ██████ ██ ██ █████ █████ █████      ██   ██ █████  ████ ██ ██ █████ █████ //
-    //                                         ██                                                     //
-    //                                         ██                                                     //
-    //                                                                                                //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                //
+//                                                                                                //
+// ██████ ██  ██ ██████ ██████ ██                           ██   ██        ██   ██       ██       //
+// ██     ██  ██ ██     ██     ██                           ███ ███        ██   ██       ██       //
+// ██     ██  ██ ██     ██     █████ █████ █████ █████      ███████ █████ █████ █████ █████ █████ //
+// ██████ ██  ██ ██ ███ ██████ ██ ██    ██ ██ ██ ██ ██      ██ █ ██ ██ ██  ██   ██ ██ ██ ██ ██    //
+//     ██ ██  ██ ██  ██     ██ ██ ██ █████ ██ ██ █████      ██   ██ █████  ██   ██ ██ ██ ██ █████ //
+//     ██  ████  ██  ██     ██ ██ ██ ██ ██ ██ ██ ██         ██   ██ ██     ██   ██ ██ ██ ██    ██ //
+// ██████   ██   ██████ ██████ ██ ██ █████ █████ █████      ██   ██ █████  ████ ██ ██ █████ █████ //
+//                                         ██                                                     //
+//                                         ██                                                     //
+//                                                                                                //
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Replaces any SVGElement(s) 'shape data' attributes with a 'd' path data attribute.
@@ -1774,7 +1794,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
             var node = svgElementCollection[i];
             var pathString = SmartSVGPath[fromShapeMethod]( node, precision );
             // i+1 to account for 1-based indices index.
-            if ( !!reversed && reverseIndices.indexOf( i+1 ) != -1 ) {
+            if ( !!reversed && reverseIndices.indexOf( i + 1 ) != -1 ) {
                 pathString = SmartSVGPath.reverseSubPath( pathString, subPaths, true );
             }
             if ( node.nodeName != 'path' ) {
