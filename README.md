@@ -46,11 +46,11 @@ Otherwise SmartSVGPath does provide some basic tools...
 ####SVGShape Methods: 
 Work directly on both individual and collections of DOM SVGElements, automatically:
 
-     - Converting there <shape> data and attributes to 'd' attribute data string.
+     - Converting their <shape> data and attributes to 'd' attribute data string.
      
      - Rewriting an existing 'd' attribute data string
 
-###### Why the strange SmartSVGPath['method'] = function(){} string naming for method declarations?
+##### Why the strange SmartSVGPath['method'] = function(){} string naming for method declarations?
 
 Smarter google Closure compatibility. This convention produces optimised output that does not
 depend on, or add additional Closure library bloat to your source code, JUST to access method
