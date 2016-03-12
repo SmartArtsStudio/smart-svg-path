@@ -10,6 +10,8 @@
 #### ...I couldn't either!
 ##### - Automatically Convert all SVG elements (individually or by collection) to paths, keeping all other attributes.
 ##### - Automatically Convert geometric arcTo commands to cubic Bezier curveTo commands.
+##### - Reverse all, some or just specific paths in a collection and not others.
+##### - Reverse all, some or just specific subPaths in a path and not others.
 ##### - and more...
 
 We don't always control the SVG output from Illustrator, Inkscape  etc... even when we do,
@@ -39,7 +41,7 @@ Or simply read the source:
 Work directly on the SVGElement attribute 'd' data string. Independant so you can build your own tools incorporating them.
 Otherwise SmartSVGPath does provide some basic tools...
 
-####SVGElement Methods: 
+####SVGShape Methods: 
 Work directly on both individual and collections of DOM SVGElements automatically:
      - Converting there <shape> data and attributes to 'd' attribute data string.
      - Rewriting an existing 'd' attribute data string
