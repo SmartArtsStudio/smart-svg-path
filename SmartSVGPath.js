@@ -94,7 +94,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Returns an array of sub-paths contained in <path d=''> path attribute string.
+     * Returns an array of the commands that make up a <path d=''> path attribute string.
      *
      * @static
      * @public
@@ -104,7 +104,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      */
     SmartSVGPath["getCommands"] = function ( d ) {
         d = SmartSVGPath.normalize( d );
-        // Split sub-paths before each command.
+        // Split string before each command.
         var subPaths = d.replace( /([a-zA-Z])\s?/g, '|$1' ).split( '|' );
         // Discard the empty string created by origin split('|M').
         if ( subPaths[0] == '' ) {
