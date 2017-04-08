@@ -133,7 +133,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
         d = d.replace( /-/g, ' - ' );            // Space delimit 'negative' signs. (maybe excessive but safe)
         d = d.replace( /-\s+/g, '-' );           // Remove space to the right of 'negative's.
         d = d.replace( /([a-zA-Z])/g, ' $1 ' );  // Space delimit the command.
-        d = d.replace( /((\s|\d)\.\d+)(\.\d)/g, '$1 $3' );
+        d = d.replace( /((\s|\d)\.\d+)(\.\d)/g, '$1 $3' );  // consume Backus-Naur Form production untill character or second decimal is encountered. https://www.w3.org/TR/SVG/paths.html#PathDataBNF
         d = d.replace( /\s+/g, ' ' ).trim();     // Compact excess whitespace.
         return d;
     };
