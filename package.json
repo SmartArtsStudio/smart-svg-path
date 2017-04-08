@@ -1,6 +1,6 @@
 {
   "name": "smart-svg-path",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Smarter, easier SVG path manipulations for fine grain control over SVG path animations.",
   "main": "SmartSVGPath.js",
   "scripts": {
