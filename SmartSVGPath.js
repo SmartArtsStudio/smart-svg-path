@@ -297,7 +297,7 @@
     SmartSVGPath["reverseSubPath"] = function reverseSubPath( path, subPathIndices, absolute ) {
         var indices, subPathArray;
         // reverseAbsolute() removes the arc commands which toAbsolute() needs the option to maintain.
-        var absolutePath = !absolute ? this.toAbsolute( path ) : path;
+        var absolutePath = !absolute ? SmartSVGPath.toAbsolute( path ) : path;
         // Split sub-paths before 'moveTo' command(s).
         var paths = absolutePath.replace( /M/g, '|M' ).split( '|' );
         // Discard the empty string created by origin split('|M').
@@ -315,14 +315,14 @@
         }
         if ( paths.length === 1 ) {
             // There are no sub-paths contained within this path.
-            return this.reverseAbsolute( absolutePath );
+            return SmartSVGPath.reverseAbsolute( absolutePath );
         }
         for (var i = 0; i < indices; i++) {
             // Normalise 'subPathIndices' 1 based index, to the Array's 0 based index.
             var subPathIndex = subPathArray[i] - 1;
             var subPath = paths[subPathIndex];
             if ( subPath ) {
-                paths[subPathIndex] = this.reverseAbsolute( subPath.trim() );
+                paths[subPathIndex] = SmartSVGPath.reverseAbsolute( subPath.trim() );
             }
         }
         return paths.join( ' ' );
