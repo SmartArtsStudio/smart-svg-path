@@ -23,8 +23,7 @@
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-
-this["SmartSVGPath"] = (function () {   'use strict';
+(function ( global ) {   'use strict';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                //
 //                                                                                                //
@@ -102,12 +101,12 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {String}    d   SVG <path d=''> path attribute string.
      * @returns {Array}         Array of subPaths.
      */
-    SmartSVGPath["getCommands"] = function ( d ) {
+    SmartSVGPath["getCommands"] = function getCommands( d ) {
         d = SmartSVGPath.normalize( d );
         // Split string before each command.
         var subPaths = d.replace( /([a-zA-Z])\s?/g, '|$1' ).split( '|' );
         // Discard the empty string created by origin split('|M').
-        if ( subPaths[0] == '' ) {
+        if ( subPaths[0] === '' ) {
             subPaths.splice( 0, 1 );
         }
         return subPaths;
@@ -125,16 +124,17 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {String}            d   SVG <path d=''> path attribute string.
      * @returns {String|Boolean}    d   Normalised path attribute string, or FALSE if 'd' not String.
      */
-    SmartSVGPath["normalize"] = function ( d ) {
+    SmartSVGPath["normalize"] = function normalize( d ) {
         if ( typeof d !== 'string' ) {
             return false
         }
-        d = d.replace( /[,\n\r]/g, ' ' );        // Replace commas, new line and carriage return characters with spaces.
-        d = d.replace( /-/g, ' - ' );            // Space delimit 'negative' signs. (maybe excessive but safe)
-        d = d.replace( /-\s+/g, '-' );           // Remove space to the right of 'negative's.
-        d = d.replace( /([a-zA-Z])/g, ' $1 ' );  // Space delimit the command.
-        d = d.replace( /((\s|\d)\.\d+)(\.\d)/g, '$1 $3' );  // consume Backus-Naur Form production untill character or second decimal is encountered. https://www.w3.org/TR/SVG/paths.html#PathDataBNF
-        d = d.replace( /\s+/g, ' ' ).trim();     // Compact excess whitespace.
+        d = d.replace( /[,\n\r]/g, ' ' );                   // Replace commas, new line and carriage return characters with spaces.
+        d = d.replace( /-/g, ' - ' );                       // Space delimit 'negative' signs. (maybe excessive but safe)
+        d = d.replace( /-\s+/g, '-' );                      // Remove space to the right of 'negative's.
+        d = d.replace( /([a-zA-Z])/g, ' $1 ' );             // Space delimit the command.
+        d = d.replace( /([a-zA-Z])/g, ' $1 ' );             // Space delimit the command.
+        d = d.replace( /((\s|\d)\.\d+)(\.\d)/g, '$1 $3' );  // consume Backus-Naur Form production until character or second decimal is encountered. https://www.w3.org/TR/SVG/paths.html#PathDataBNF
+        d = d.replace( /\s+/g, ' ' ).trim();                // Compact excess whitespace.
         return d;
     };
 
@@ -149,7 +149,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}  [precision=1]     How many decimal places to round coordinates to.
      * @returns {string}
      */
-    SmartSVGPath["reverse"] = function ( d, precision ) {
+    SmartSVGPath["reverse"] = function reverse( d, precision ) {
         var absolutePath = SmartSVGPath.toAbsolute( d, precision );
         return SmartSVGPath.reverseAbsolute( absolutePath );
     };
@@ -176,7 +176,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}  [precision=1]   How many decimal places to round coordinates to.
      * @returns {string}                  Reversed absolute path string.
      */
-    SmartSVGPath["reverseAbsolute"] = function ( absolutePath, precision ) {
+    SmartSVGPath["reverseAbsolute"] = function reverseAbsolute( absolutePath, precision ) {
 
         absolutePath = SmartSVGPath.normalize( absolutePath );
 
@@ -294,7 +294,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                      Will throw an error if it is not absolute.
      * @returns {String}                                Reversed path/sub-path string.
      */
-    SmartSVGPath["reverseSubPath"] = function ( path, subPathIndices, absolute ) {
+    SmartSVGPath["reverseSubPath"] = function reverseSubPath( path, subPathIndices, absolute ) {
         var indices, subPathArray;
         // reverseAbsolute() removes the arc commands which toAbsolute() needs the option to maintain.
         var absolutePath = !absolute ? this.toAbsolute( path ) : path;
@@ -313,7 +313,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
             indices = paths.length;
             subPathArray = SmartSVGPath._newIndicesVector( indices );
         }
-        if ( paths.length == 1 ) {
+        if ( paths.length === 1 ) {
             // There are no sub-paths contained within this path.
             return this.reverseAbsolute( absolutePath );
         }
@@ -340,7 +340,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {Number}    [precision=1]       How many decimal places to limit coordinates to.
      * @returns {String}
      */
-    SmartSVGPath["toAbsolute"] = function ( d, precision/*, reversible*/ ) {
+    SmartSVGPath["toAbsolute"] = function toAbsolute( d, precision/*, reversible*/ ) {
         if ( typeof d !== 'string' ) {
             return d
         }
@@ -640,7 +640,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                           immediately prior.
      * @returns {String}        cubic curveTo    Cubic (poly)Bézier sub-path.
      */
-    SmartSVGPath["arcToCurve"] = function ( x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2, polyCubic ) {
+    SmartSVGPath["arcToCurve"] = function arcToCurve( x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2, polyCubic ) {
         return ' C ' + SmartSVGPath._arcToCubicArgs( x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2, polyCubic ).toString();
     };
 
@@ -668,7 +668,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @returns {Array}
      * @private
      */
-    SmartSVGPath._arcToCubicArgs = function ( x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2, polyCubic ) {
+    SmartSVGPath._arcToCubicArgs = function _arcToCubicArgs( x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2, polyCubic ) {
         var rotate = SmartSVGPath._arcToCubicArgs.rotate;
         var sqrt = Math.sqrt;
         var abs = Math.abs;
@@ -705,7 +705,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                 ry = yLength * ry;
             }
             // Which side of the cubic path should control points be?
-            var normal = (largeArcFlag == sweepFlag ? -1 : 1)
+            var normal = (largeArcFlag === sweepFlag ? -1 : 1)
                 * sqrt( abs( (rx2 * ry2 - rx2 * yy2 - ry2 * xx2)
                     / (rx2 * yy2 + ry2 * xx2 ) ) );
             var cx = normal * (rx * y / ry) + ((x1 + x2) / 2);
@@ -805,7 +805,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {Number}        [precision=1]     How many decimal places to round coordinates to.
      * @returns {String}
      */
-    SmartSVGPath["fromElement"] = function ( svgElement, precision ) {
+    SmartSVGPath["fromElement"] = function fromElement( svgElement, precision ) {
 
         if ( !svgElement ) {
             return
@@ -838,7 +838,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {Number}        [precision=1]     How many decimal places to round coordinates to.
      * @returns {String}
      */
-    SmartSVGPath["fromCircle"] = function ( circleElement, precision ) {
+    SmartSVGPath["fromCircle"] = function fromCircle( circleElement, precision ) {
         /* Specific attributes: cx cy r */
         var cx, cy, r, pathString;
 
@@ -848,7 +848,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
 
         pathString = SmartSVGPath._ellipsePathString( cx, cy, r );
 
-        if ( pathString.indexOf( '.' ) != -1 ) {
+        if ( pathString.indexOf( '.' ) !== -1 ) {
             pathString = SmartSVGPath.roundDecimals( pathString, precision || 1 );
         }
         return  pathString;
@@ -864,7 +864,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {Number}            [precision=1]     How many decimal places to round coordinates to.
      * @returns {String}
      */
-    SmartSVGPath["fromEllipse"] = function ( ellipseElement, precision ) {
+    SmartSVGPath["fromEllipse"] = function fromEllipse( ellipseElement, precision ) {
         /* Specific attributes: cx cy rx ry */
         var cx, cy, rx, ry, transform, pathString;
         var xAxisRotation = 0;
@@ -888,7 +888,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
         }
         pathString = SmartSVGPath._ellipsePathString( cx, cy, rx, ry, xAxisRotation );
 
-        if ( pathString.indexOf( '.' ) != -1 ) {
+        if ( pathString.indexOf( '.' ) !== -1 ) {
             pathString = SmartSVGPath.roundDecimals( pathString, precision || 1 );
         }
         return  pathString;
@@ -907,7 +907,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}    xAxisRotation
      * @returns {String}
      */
-    SmartSVGPath._ellipsePathString = function ( cx, cy, rx, ry, xAxisRotation ) {
+    SmartSVGPath._ellipsePathString = function _ellipsePathString( cx, cy, rx, ry, xAxisRotation ) {
         cx = +cx;
         cy = +cy;
         rx = +rx;
@@ -936,7 +936,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}        [precision=1]     How many decimal places to round coordinates to.
      * @returns {string}
      */
-    SmartSVGPath["fromLine"] = function ( lineElement, precision ) {
+    SmartSVGPath["fromLine"] = function fromLine( lineElement, precision ) {
         /* Specific attributes: x1 x2 y1 y2 */
         var x1, y1, x2, y2;
 
@@ -949,7 +949,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
             'M ' + x1 + ' ' + y1
             + ' L ' + x2 + ' ' + y2;
 
-        if ( pathString.indexOf( '.' ) != -1 ) {
+        if ( pathString.indexOf( '.' ) !== -1 ) {
             pathString = SmartSVGPath.roundDecimals( pathString, precision || 1 );
         }
         return  pathString;
@@ -967,7 +967,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}            [precision=1]     How many decimal places to round coordinates to.
      * @returns {string}
      */
-    SmartSVGPath["fromPolygon"] = function ( polygonElement, precision ) {
+    SmartSVGPath["fromPolygon"] = function fromPolygon( polygonElement, precision ) {
         /* Specific attributes: closedPath 'Z/z',  Points */
         var pathString = SmartSVGPath.fromPolyline( polygonElement, precision );
         return pathString + 'Z';
@@ -985,12 +985,12 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}            [precision=1]     How many decimal places to round coordinates to.
      * @returns {string}
      */
-    SmartSVGPath["fromPath"] = function ( pathElement, precision ) {
+    SmartSVGPath["fromPath"] = function fromPath( pathElement, precision ) {
         /* Specific attributes: 'd' data string */
         var pathString = SmartSVGPath.normalize( pathElement.attributes.d.nodeValue );
         pathString = SmartSVGPath.toAbsolute( pathString );
 
-        if ( !!precision && pathString.indexOf( '.' ) != -1 ) {
+        if ( !!precision && pathString.indexOf( '.' ) !== -1 ) {
             pathString = SmartSVGPath.roundDecimals( pathString, precision );
         }
         return  pathString;
@@ -1008,7 +1008,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}                [precision=1]     How many decimal places to round coordinates to.
      * @returns {string}
      */
-    SmartSVGPath["fromPolyline"] = function ( polylineElement, precision ) {
+    SmartSVGPath["fromPolyline"] = function fromPolyline( polylineElement, precision ) {
         /* Specific attributes: Points */
         var points, pathString;
         points = polylineElement.getAttribute( 'points' );
@@ -1023,7 +1023,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
             pathString += ' L' + points[i] + ' ' + points[i + 1];
         }
 
-        if ( pathString.indexOf( '.' ) != -1 ) {
+        if ( pathString.indexOf( '.' ) !== -1 ) {
             pathString = SmartSVGPath.roundDecimals( pathString, precision || 1 );
         }
         return  pathString;
@@ -1039,7 +1039,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {number}            [precision=1]     How many decimal places to round coordinates to.
      * @returns {string}
      */
-    SmartSVGPath["fromRect"] = function ( rectElement, precision ) {
+    SmartSVGPath["fromRect"] = function fromRect( rectElement, precision ) {
         /* Specific attributes: x y width height, rx, ry */
         var x, y, width, height, rx, ry, pathString;
         var x0, x1, x2, x3, x4, y0, y1, y2 , y3 , y4;
@@ -1052,12 +1052,12 @@ this["SmartSVGPath"] = (function () {   'use strict';
         rx = +rectElement.getAttribute( 'rx' );
         ry = +rectElement.getAttribute( 'ry' );
 
-        if ( rx && rx != 0 /*&& ry && ry != 0*/ ) {
+        if ( rx && rx !== 0 /*&& ry && ry != 0*/ ) {
             // Rounded rectangle.
             sideWidth = width - rx * 2;
             SideHeight = height - ry * 2;
             // Is it even possible to have an rx without an ry? Just in case...
-            ry = ry == 0 ? rx : ry;
+            ry = ry === 0 ? rx : ry;
             arcTo = 'A ' + rx + ' ' + ry + ' ' + 0 + ' ' + 0 + ' ' + 1 + ' ';
 
             // moveTo
@@ -1118,7 +1118,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                 + ' Z';
         }
 
-        if ( pathString.indexOf( '.' ) != -1 ) {
+        if ( pathString.indexOf( '.' ) !== -1 ) {
             pathString = SmartSVGPath.roundDecimals( pathString, precision || 1 );
         }
         return  pathString;
@@ -1136,11 +1136,11 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @returns {Boolean}                       TRUE if in exclude list.
      *                                          FALSE otherwise.
      */
-    SmartSVGPath["isExcluded"] = function ( attribute, excluded ) {
+    SmartSVGPath["isExcluded"] = function isExcluded( attribute, excluded ) {
         if ( !attribute || !excluded || !Array.isArray( excluded ) ) {
             return false
         }
-        return ( excluded.indexOf( attribute.nodeName ) != -1 );
+        return ( excluded.indexOf( attribute.nodeName ) !== -1 );
     };
 
     /**
@@ -1157,13 +1157,13 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @returns {String}                    SVG <path d=''> path attribute string.
      *                                      (Decimals rounded by precision.)
      */
-    SmartSVGPath["roundDecimals"] = function ( string, precision ) {
+    SmartSVGPath["roundDecimals"] = function roundDecimals( string, precision ) {
         var tokens = string.split( ' ' );
         var tokensLength = tokens.length;
 
         for (var i = 0; i < tokensLength; i++) {
             var token = tokens[i];
-            if ( token != '' && Number( token ) ) {
+            if ( token !== '' && Number( token ) ) {
                 tokens[i] = SmartSVGPath.smartRound( token, precision || 1 );
             }
         }
@@ -1192,7 +1192,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {Number}  precision     How many decimal places to round to.
      * @returns {Number}
      */
-    SmartSVGPath["smartRound"] = function ( number, precision ) {
+    SmartSVGPath["smartRound"] = function smartRound( number, precision ) {
         if ( precision && precision !== SmartSVGPath.smartRound.PRECISION ) {
             SmartSVGPath.smartRound.ERROR = precision !== false ? +Math.pow( .1, precision ).toFixed( precision ) : 1e-2;
             SmartSVGPath.smartRound.PRECISION = precision;
@@ -1229,7 +1229,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                              (Which starts at the nominated vertex)
      *                                              or FALSE if 'd' is not a string.
      */
-    SmartSVGPath["setFirstVertex"] = function ( d, firstVertex, lineToWrap ) {
+    SmartSVGPath["setFirstVertex"] = function setFirstVertex( d, firstVertex, lineToWrap ) {
         if ( typeof d !== 'string' ) {
             return false
         }
@@ -1276,7 +1276,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @public
      * @method  traceVertices
      * @param   {String}        d           SVG <path d=''> path attribute string.
-     * @param   {Function}      logMethod   Callback which console.logs the vertices data.
+     * @param   {Function}      [logMethod] Callback which console.logs the vertices data.
      *                                      It will be passed an array of objects which contain
      *                                          [{  count: 'current position' path vertices count,
      *                                              subPathIndex: subPath array index this references,
@@ -1286,7 +1286,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                          }]
      * @returns {Object}                        Data object.
      */
-    SmartSVGPath["traceVertices"] = function ( d, logMethod ) {
+    SmartSVGPath["traceVertices"] = function traceVertices( d, logMethod ) {
         if ( typeof d !== 'string' ) {
             return false
         }
@@ -1410,7 +1410,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {Number}       length
      * @return  {Array.<Number>}
      */
-    SmartSVGPath._newIndicesVector = function ( length ) {
+    SmartSVGPath._newIndicesVector = function _newIndicesVector( length ) {
         var array = [];
         var index = 1;
         for (var i = 0; i < length; ++i) {
@@ -1449,11 +1449,11 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                               Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                               Pass NO subPaths array to reverse whole path.
      *                                                          FALSE otherwise.
-     * @returns {SVGElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                        Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertElements"] = function ( svgElements, reversed, subPaths, precision ) {
-        if ( !svgElements || svgElements.length == 0 ) {
-            return console.log( 'SmartSVGPath ERROR: SmartSVGPath.convertElements received in-compatible data.' )
+    SmartSVGPath["convertElements"] = function convertElements( svgElements, reversed, subPaths, precision ) {
+        if ( !svgElements || svgElements.length === 0 ) {
+            return console.log( 'SmartSVGPath ERROR: SmartSVGPath.convertElements received in-compatible svgElements argument.' )
         }
         var elementName;
         if ( svgElements.nodeName ) {
@@ -1478,7 +1478,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @static
      * @public
      * @method  convertPath
-     * @param   {SVGCircleElement|HTMLCollection}   pathElements  SVG <circle> element (or an Array of them).
+     * @param   {SVGPathElement|HTMLCollection}     pathElements  SVG <circle> element (or an Array of them).
      * @param   {Number}                           [precision=1]  How many decimal places to round coordinates to.
      * @param   {Boolean|Array.<Number>}        [reversed=false]  TRUE To reverse all <shape> paths (or just some by...)
      *                                                                 Specify subPaths with an array of indices [ 2,4,9 ...]
@@ -1487,9 +1487,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                                 Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                 Pass NO subPaths array to reverse whole path.
      *                                                            FALSE otherwise.
-     * @returns {SVGCircleElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                          Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertPath"] = function ( pathElements, reversed, subPaths, precision ) {
+    SmartSVGPath["convertPath"] = function convertPath( pathElements, reversed, subPaths, precision ) {
         /* Specific attributes: cx cy r */
         return SmartSVGPath._convertElementFactory( 'path', pathElements, reversed, subPaths, precision );
     };
@@ -1509,9 +1509,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                                 Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                 Pass NO subPaths array to reverse whole path.
      *                                                            FALSE otherwise.
-     * @returns {SVGCircleElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                          Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertCircle"] = function ( circleElements, reversed, subPaths, precision ) {
+    SmartSVGPath["convertCircle"] = function convertCircle( circleElements, reversed, subPaths, precision ) {
         /* Specific attributes: cx cy r */
         return SmartSVGPath._convertElementFactory( 'circle', circleElements, reversed, subPaths, precision );
     };
@@ -1531,9 +1531,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                                   Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                   Pass NO subPaths array to reverse whole path.
      *                                                              FALSE otherwise.
-     * @returns {SVGEllipseElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                            Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertEllipse"] = function ( ellipseElements, reversed, subPaths, precision ) {
+    SmartSVGPath["convertEllipse"] = function convertEllipse( ellipseElements, reversed, subPaths, precision ) {
         /* Specific attributes: cx cy rx ry */
         return SmartSVGPath._convertElementFactory( 'ellipse', ellipseElements, reversed, subPaths, precision );
     };
@@ -1553,9 +1553,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                                   Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                   Pass NO subPaths array to reverse whole path.
      *                                                              FALSE otherwise.
-     * @returns {SVGLineElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                            Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertLine"] = function ( lineElements, reversed, subPaths, precision ) {
+    SmartSVGPath["convertLine"] = function convertLine( lineElements, reversed, subPaths, precision ) {
         /* Specific attributes: x1 x2 y1 y2 */
         return SmartSVGPath._convertElementFactory( 'line', lineElements, reversed, subPaths, precision );
     };
@@ -1575,9 +1575,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                                     Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                     Pass NO subPaths array to reverse whole path.
      *                                                                FALSE otherwise.
-     * @returns {SVGPolygonElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                              Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertPolygon"] = function ( polygonElements, reversed, subPaths, precision ) {
+    SmartSVGPath["convertPolygon"] = function convertPolygon( polygonElements, reversed, subPaths, precision ) {
         /* Specific attributes: points, closedPath */
         return SmartSVGPath._convertElementFactory( 'polygon', polygonElements, reversed, subPaths, precision );
     };
@@ -1597,9 +1597,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                                     Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                     Pass NO subPaths array to reverse whole path.
      *                                                                FALSE otherwise.
-     * @returns {SVGPolylineElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                              Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertPolyline"] = function ( polylineElements, reversed, subPaths, precision ) {
+    SmartSVGPath["convertPolyline"] = function convertPolyline( polylineElements, reversed, subPaths, precision ) {
         /* Specific attributes: points */
         return SmartSVGPath._convertElementFactory( 'polyline', polylineElements, reversed, subPaths, precision );
     };
@@ -1619,9 +1619,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                                Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                Pass NO subPaths array to reverse whole path.
      *                                                           FALSE otherwise.
-     * @returns {SVGRectElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                         Array of generated SVGPathElement references.
      */
-    SmartSVGPath["convertRect"] = function ( rectElements, reversed, subPaths, precision ) {
+    SmartSVGPath["convertRect"] = function convertRect( rectElements, reversed, subPaths, precision ) {
         /* Specific attributes: x y width height rx ry  */
         return SmartSVGPath._convertElementFactory( 'rect', rectElements, reversed, subPaths, precision )
     };
@@ -1640,9 +1640,9 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                              Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                              Pass NO subPaths array to reverse whole path.
      *                                                         FALSE otherwise.
-     * @returns {SVGElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                      Array of generated SVGPathElement references, if any.
      */
-    SmartSVGPath._convertElementFactory = function ( name, shapeElements, reversed, subPaths, precision ) {
+    SmartSVGPath._convertElementFactory = function _convertElementFactory( name, shapeElements, reversed, subPaths, precision ) {
 
         switch (name) {
             case 'circle':
@@ -1723,7 +1723,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
                 );
 
             default:
-                var error = 'SmartSVGPath ERROR: SmartSVGPath._convertElementFactory( ' + name + ' ) received and incompatible SVGElement, or corrupt array of SVGElements. Please check the SVGElement(s) data you are trying to convert.';
+                var error = 'SmartSVGPath ERROR: SmartSVGPath._convertElementFactory( ' + name + ' ) received and incompatible SVGElement, or corrupt array of SVGElements. Please check the SVGElement/s data you are trying to convert.';
                 return console.log( error );
         }
     };
@@ -1746,15 +1746,17 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                                             Specify subPaths with an array of indices [ 1,7,11 ...]
      *                                                             Pass NO subPaths array to reverse whole path.
      *                                                        FALSE otherwise.
-     * @returns {SVGElement|HTMLCollection}
+     * @returns {Array.<SVGPathElement>}                      Array of generated SVGPathElement references, if any.
      */
-    SmartSVGPath._convertElements = function ( svgElements, shape, attributes, pathMethod, reversed, subPaths, precision ) {
+    SmartSVGPath._convertElements = function _convertElements( svgElements, shape, attributes, pathMethod, reversed, subPaths, precision ) {
 
-        if ( svgElements.nodeName == shape ) {
+        if ( svgElements.nodeName === shape ) {
+            // SVGElement
             var array = SmartSVGPath._convertCollection( [svgElements], attributes, pathMethod, reversed, subPaths, precision );
-            return array[0]
+            return array[0];
         }
-        else if ( svgElements[0].nodeName == shape ) {
+        else if ( svgElements[0].nodeName === shape ) {
+            // HTMLCollection
             return SmartSVGPath._convertCollection( svgElements, attributes, pathMethod, reversed, subPaths, precision );
         }
         var method = shape.charAt( 0 ).toUpperCase() + shape.slice( 1 );
@@ -1768,51 +1770,60 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @static
      * @private
      * @method  _convertCollection
-     * @param   {HTMLCollection}            svgElementCollection    SVG <circle> element (or an Array of them).
-     * @param   {Array.<String>}            attributes              List of attributes unique to the shape element.
-     * @param   {String}                    fromShapeMethod         The name of the fromShape method to extract path.
-     * @param   {Boolean|Array.<Number>}    [reversed=false]        TRUE To reverse all <shape> paths (or just some by...)
-     *                                                                   Specify subPaths with an array of (1-based, no 0 index)
-     *                                                                   indices [ 2,4,9 ...]
-     *                                                              FALSE otherwise.
-     * @param   {Boolean|Array.<Number>}    [subPaths=false]        TRUE To reverse all subPaths (or just some by...)
-     *                                                                   Specify subPaths with an array of (1-based, no 0 index)
-     *                                                                   indices [ 2,4,9 ...]
-     *                                                                   Pass NO subPaths array to reverse whole path.
-     *                                                              FALSE otherwise.
-     * @param   {Number}                    [precision=1]           How many decimal places to round coordinates to.
-     * @returns {HTMLCollection}
+     * @param   {Array.<SVGElement>|HTMLCollection} svgElementCollection    Single SVGElement array, or an HTMLCollection of SVGElements.
+     * @param   {Array.<String>}                    attributes              List of attributes unique to the shape element.
+     * @param   {String}                            fromShapeMethod         The name of the fromShape method to extract path.
+     * @param   {Boolean|Array.<Number>}            [reversed=false]        TRUE To reverse all <shape> paths (or just some by...)
+     *                                                                          Specify subPaths with an array of (1-based, no 0 index)
+     *                                                                          indices [ 2,4,9 ...]
+     *                                                                      FALSE otherwise.
+     * @param   {Boolean|Array.<Number>}            [subPaths=false]        TRUE To reverse all subPaths (or just some by...)
+     *                                                                          Specify subPaths with an array of (1-based, no 0 index)
+     *                                                                          indices [ 2,4,9 ...]
+     *                                                                          Pass NO subPaths array to reverse whole path.
+     *                                                                      FALSE otherwise.
+     * @param   {Number}                            [precision=1]                   How many decimal places to round coordinates to.
+     * @returns {Array.<SVGPathElement>}                                    Array of generated SVGPathElement references, if any.
      */
-    SmartSVGPath._convertCollection = function ( svgElementCollection, attributes, fromShapeMethod, reversed, subPaths, precision ) {
+    SmartSVGPath._convertCollection = function _convertCollection( svgElementCollection, attributes, fromShapeMethod, reversed, subPaths, precision ) {
         var reverseIndices;
-        var exclude = attributes;
+        var exclude        = attributes;
         var elementsLength = svgElementCollection.length;
         var pathCollection = [];
         if ( !!reversed ) {
             reverseIndices = Array.isArray( reversed ) ? reversed : SmartSVGPath._newIndicesVector( elementsLength );
         }
-        for (var i = 0; i < elementsLength; i++) {
-            var node = svgElementCollection[i];
-            var pathString = SmartSVGPath[fromShapeMethod]( node, precision );
+        for ( var i = 0; i < elementsLength; i++ ) {
+            var node       = svgElementCollection[ i ];
+            var pathString = SmartSVGPath[ fromShapeMethod ]( node, precision );
             // i+1 to account for 1-based indices index.
-            if ( !!reversed && reverseIndices.indexOf( i + 1 ) != -1 ) {
+            if ( !!reversed && reverseIndices.indexOf( i + 1 ) !== -1 ) {
                 pathString = SmartSVGPath.reverseSubPath( pathString, subPaths, true );
             }
-            if ( node.nodeName != 'path' ) {
-                var pathNode = SmartSVGPath.createSVGNode( 'path', node );
+            if ( node.nodeName !== 'path' ) {
+                var newPathNode    = SmartSVGPath.createSVGNode( 'path', node );
                 var nodeAttributes = node.attributes;
-                pathNode = SmartSVGPath.copyFilteredAttributes( pathNode, nodeAttributes, exclude );
-                pathNode.setAttribute( 'd', pathString );
-                pathCollection.push( node.parentNode.insertBefore( pathNode, node ) );
+                newPathNode        = SmartSVGPath.copyFilteredAttributes( newPathNode, nodeAttributes, exclude );
+                newPathNode.setAttribute( 'd', pathString );
+                pathCollection.push( node.parentNode.insertBefore( newPathNode, node ) );
             }
             else {
                 node.setAttribute( 'd', pathString );
             }
         }
-        if ( pathNode ) {
-            // remove shapeElement element nodes.
-            while (svgElementCollection.length > 0) {
-                svgElementCollection.item( 0 ).parentNode.removeChild( svgElementCollection.item( 0 ) );
+        if ( newPathNode ) {
+            // remove converted SVGElements from DOM.
+            if ( svgElementCollection.item ) {
+                // remove shapeElement collection.
+                while ( svgElementCollection.length > 0 ) {
+                    svgElementCollection.item( 0 ).parentNode.removeChild( svgElementCollection.item( 0 ) );
+                }
+            }
+            else {
+                // remove shapeElement.
+                svgElementCollection[ 0 ].parentNode.removeChild( svgElementCollection[ 0 ] );
+                // Free shapeElement memory.
+                svgElementCollection[ 0 ] = null;
             }
         }
         return pathCollection;
@@ -1829,7 +1840,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      *                                      detect active DOM properties.
      * @returns {HTMLElement}
      */
-    SmartSVGPath["createSVGNode"] = function ( type, svgElement ) {
+    SmartSVGPath["createSVGNode"] = function createSVGNode( type, svgElement ) {
         var svg = svgElement;
         // get parent SVGSVGElement reference.
         while (!(svg instanceof SVGSVGElement)) {
@@ -1857,7 +1868,7 @@ this["SmartSVGPath"] = (function () {   'use strict';
      * @param   {Array.<String>}    excluded    List of shape element unique properties NOT to copy.
      * @returns {HTMLElement}
      */
-    SmartSVGPath["copyFilteredAttributes"] = function ( pathNode, attributes, excluded ) {
+    SmartSVGPath["copyFilteredAttributes"] = function copyFilteredAttributes( pathNode, attributes, excluded ) {
         for (var i = 0; i < attributes.length; i++) {
             if ( !SmartSVGPath.isExcluded( attributes[i], excluded ) ) {
                 pathNode.setAttribute( attributes[i].nodeName, attributes[i].nodeValue );
@@ -1866,7 +1877,25 @@ this["SmartSVGPath"] = (function () {   'use strict';
         return pathNode;
     };
 
-    return SmartSVGPath;
+   // Environment Module support.
 
-})();
-(this["module"] && this["module"]["exports"] && (this["module"]["exports"] = this["SmartSVGPath"]));
+    // AMD
+    if ( typeof define === 'function' && define.amd ) {
+        define( function () {
+            return SmartSVGPath;
+        } );
+    }
+    else if ( typeof exports !== 'undefined' ) {
+        // Node.js
+        if ( typeof module !== 'undefined' && module.exports ) {
+            return ( exports = module.exports = SmartSVGPath );
+        }
+        // CommonJS
+        exports.SmartSVGPath = SmartSVGPath;
+    }
+    else {
+        // Browser
+        global["SmartSVGPath"] = SmartSVGPath;
+    }
+
+}( this ));
