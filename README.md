@@ -43,7 +43,7 @@ Work directly on the SVGElement attribute 'd' data string. Independant so you ca
 Otherwise SmartSVGPath does provide some basic tools...
 
 #### SVGShape Methods: 
-Work directly on both individual and collections of DOM SVGElements, automatically:
+Work directly on both individual and HTMLCollections of DOM SVGElements, automatically:
 
      - Converting their <shape> data and attributes to 'd' attribute data string.
      
