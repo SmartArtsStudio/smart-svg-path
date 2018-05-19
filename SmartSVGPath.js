@@ -1449,7 +1449,7 @@
      *                                                               Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                               Pass NO subPaths array to reverse whole path.
      *                                                          FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                        Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}         Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertElements"] = function convertElements( svgElements, reversed, subPaths, precision ) {
         if ( !svgElements || svgElements.length === 0 ) {
@@ -1487,7 +1487,7 @@
      *                                                                 Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                 Pass NO subPaths array to reverse whole path.
      *                                                            FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                          Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}           Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertPath"] = function convertPath( pathElements, reversed, subPaths, precision ) {
         /* Specific attributes: cx cy r */
@@ -1509,7 +1509,7 @@
      *                                                                 Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                 Pass NO subPaths array to reverse whole path.
      *                                                            FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                          Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}           Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertCircle"] = function convertCircle( circleElements, reversed, subPaths, precision ) {
         /* Specific attributes: cx cy r */
@@ -1531,7 +1531,7 @@
      *                                                                   Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                   Pass NO subPaths array to reverse whole path.
      *                                                              FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                            Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}             Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertEllipse"] = function convertEllipse( ellipseElements, reversed, subPaths, precision ) {
         /* Specific attributes: cx cy rx ry */
@@ -1553,7 +1553,7 @@
      *                                                                   Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                   Pass NO subPaths array to reverse whole path.
      *                                                              FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                            Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}             Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertLine"] = function convertLine( lineElements, reversed, subPaths, precision ) {
         /* Specific attributes: x1 x2 y1 y2 */
@@ -1575,7 +1575,7 @@
      *                                                                     Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                     Pass NO subPaths array to reverse whole path.
      *                                                                FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                              Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}               Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertPolygon"] = function convertPolygon( polygonElements, reversed, subPaths, precision ) {
         /* Specific attributes: points, closedPath */
@@ -1597,7 +1597,7 @@
      *                                                                     Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                     Pass NO subPaths array to reverse whole path.
      *                                                                FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                              Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}               Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertPolyline"] = function convertPolyline( polylineElements, reversed, subPaths, precision ) {
         /* Specific attributes: points */
@@ -1619,7 +1619,7 @@
      *                                                                Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                                Pass NO subPaths array to reverse whole path.
      *                                                           FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                         Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}          Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath["convertRect"] = function convertRect( rectElements, reversed, subPaths, precision ) {
         /* Specific attributes: x y width height rx ry  */
@@ -1640,7 +1640,7 @@
      *                                                              Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                              Pass NO subPaths array to reverse whole path.
      *                                                         FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                      Array of generated SVGPathElement references, if any.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}        Individual or Array of generated SVGPathElement references.
      */
     SmartSVGPath._convertElementFactory = function _convertElementFactory( name, shapeElements, reversed, subPaths, precision ) {
 
@@ -1746,7 +1746,7 @@
      *                                                             Specify subPaths with an array of indices [ 1,7,11 ...]
      *                                                             Pass NO subPaths array to reverse whole path.
      *                                                        FALSE otherwise.
-     * @returns {Array.<SVGPathElement>}                      Array of generated SVGPathElement references, if any.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}       Individual or Array of generated SVGPathElement references, if any.
      */
     SmartSVGPath._convertElements = function _convertElements( svgElements, shape, attributes, pathMethod, reversed, subPaths, precision ) {
 
