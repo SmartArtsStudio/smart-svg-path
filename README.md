@@ -30,10 +30,10 @@ This library is designed to be Node.js and Browser compatible, just drop it wher
 and access it via the SmartSVGPath name space (or your own alias).
 
 Don't instantiate SmartSVGPath, its a static 'class', just use it... 
-
+```js
 var svg = SmartSVGPath;
 var reversedPathString = svg.reverse( pathString );
-
+```
 The source code is fully self documenting and commented for education and enlightenment.
 The source code is also fully YUIdoc-umented, you can generate YUIDocs locally if I have not yet posted the documentation online.
 (I have more pressing matters currently, but a GruntFile with the usual tasks and documentation are on the TODO list.)
