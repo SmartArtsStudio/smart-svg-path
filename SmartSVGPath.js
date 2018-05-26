@@ -1639,7 +1639,7 @@
      *                                                              Specify subPaths with an array of indices [ 2,4,9 ...]
      *                                                              Pass NO subPaths array to reverse whole path.
      *                                                         FALSE otherwise.
-     * @returns {SVGPathElement|Array.<SVGPathElement>}        Individual or Array of generated SVGPathElement references.
+     * @returns {SVGPathElement|Array.<SVGPathElement>}        Individual or Array of generated SVGPathElement references, if any.
      */
     SmartSVGPath._convertElementFactory = function _convertElementFactory( name, shapeElements, reversed, subPaths, precision ) {
 
@@ -1885,16 +1885,17 @@
         } );
     }
     else if ( typeof exports !== 'undefined' ) {
-        // Node.js
+
         if ( typeof module !== 'undefined' && module.exports ) {
-            return ( exports = module.exports = SmartSVGPath );
+            // Node.js
+            return exports = module.exports = SmartSVGPath;
         }
-        // CommonJS
-        exports.SmartSVGPath = SmartSVGPath;
+        // CommonJS.
+        return exports.SmartSVGPath = SmartSVGPath;
     }
     else {
         // Browser
-        global["SmartSVGPath"] = SmartSVGPath;
+        return global["SmartSVGPath"] = SmartSVGPath;
     }
 
 }( this ));
